@@ -35,7 +35,7 @@ router.post("/", (req, res) => {
   const students = JSON.parse(fileAsAString);
 
   const newStudent = req.body;
-  // console.log("NEWSTUDENTTTT", newStudent);
+  // console.log("NEWSTUDENT", newStudent);
 
   if (duplicateEmailCheck(newStudent.email)) {
     newStudent.ID = uniqid();
@@ -53,9 +53,11 @@ router.put("/:id", (req, res) => {
   const fileAsABuffer = fs.readFileSync(studentsJSONPath);
   const fileAsAString = fileAsABuffer.toString();
   const students = JSON.parse(fileAsAString);
-  newStudentsArray = students.filter((student) => student.ID !== req.params.id);
+  const newStudentsArray = students.filter(
+    (student) => student.ID !== req.params.id
+  );
 
-  modifiedStudent = req.body;
+  const modifiedStudent = req.body;
   modifiedStudent.ID = req.params.id;
   newStudentsArray.push(modifiedStudent);
 
@@ -68,7 +70,9 @@ router.delete("/:id", (req, res) => {
   const fileAsAString = fileAsABuffer.toString();
   const students = JSON.parse(fileAsAString);
 
-  newStudentsArray = students.filter((student) => student.ID !== req.params.id);
+  const newStudentsArray = students.filter(
+    (student) => student.ID !== req.params.id
+  );
   fs.writeFileSync(studentsJSONPath, JSON.stringify(newStudentsArray));
   res.status(204).send();
 });

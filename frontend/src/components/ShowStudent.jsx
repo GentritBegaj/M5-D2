@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
-import EditOrDeleteModal from "../EditOrDeleteModal";
+import EditOrDeleteModal from "./EditOrDeleteModal";
 
 const ShowStudent = (props) => {
+  const [modalShow, setModalShow] = useState(false);
   return (
     <>
       <tr>
@@ -11,13 +12,18 @@ const ShowStudent = (props) => {
         <td> {props.student.surname} </td>
         <td>{props.student.email}</td>
         <td>{props.student.date} </td>
-        <td>
-          <div>
+        <td className="text-right">
+          <div onClick={() => setModalShow(true)} style={{ cursor: "pointer" }}>
             <BorderColorIcon />{" "}
           </div>
         </td>
       </tr>
-      <EditOrDeleteModal student={props.student} />
+      <EditOrDeleteModal
+        fetchStudents={props.fetchStudents}
+        student={props.student}
+        modalShow={modalShow}
+        onHide={() => setModalShow(false)}
+      />
     </>
   );
 };

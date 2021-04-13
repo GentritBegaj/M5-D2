@@ -6,7 +6,7 @@ const EditOrDeleteModal = (props) => {
   const [surname, setSurname] = useState(props.student.surname);
   const [email, setEmail] = useState(props.student.email);
   const [date, setDate] = useState(props.student.date);
-  const [id, setId] = useState(props.student.ID);
+  // const [id, setId] = useState(props.student.ID);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,26 +15,50 @@ const EditOrDeleteModal = (props) => {
       surname,
       email,
       date,
+      ID: props.student.ID,
     };
     console.log(studentObj);
 
     try {
-      const response = await fetch("http://localhost:3001/students/", {
-        method: "PUT",
-        body: JSON.stringify(studentObj),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "http://localhost:3001/students/" + props.student.ID,
+        {
+          method: "PUT",
+          body: JSON.stringify(studentObj),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.ok) {
-        console.log("Student Added successfully");
+        console.log("Student edited successfully");
         props.fetchStudents();
-        setName("");
-        setSurname("");
-        setEmail("");
-        setDate("");
+        props.onHide();
       } else {
-        console.log("Error while adding student");
+        console.log("Error while editing student");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    console.log("http://localhost:3001/students/" + props.student.ID);
+    console.log(props.student.ID);
+    try {
+      const response = await fetch(
+        "http://localhost:3001/students/" + props.student.ID,
+        {
+          method: "DELETE",
+        }
+      );
+      if (response.ok) {
+        console.log("Student deleted successfully");
+        props.fetchStudents();
+        props.onHide();
+      } else {
+        console.log("Error while deleting student");
       }
     } catch (error) {
       console.log(error);
@@ -43,12 +67,12 @@ const EditOrDeleteModal = (props) => {
 
   return (
     <div>
-      <Modal>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit or Delete Student</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
+      <Modal show={props.modalShow} onHide={props.onHide}>
+        <Form onSubmit={handleSubmit}>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit or Delete Student</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
             <Form.Group>
               <Form.Label>Name:</Form.Label>
               <Form.Control
@@ -94,17 +118,16 @@ const EditOrDeleteModal = (props) => {
                 onChange={(e) => setDate(e.target.value)}
               />
             </Form.Group>
-            <div className="text-center">
-              <Button className="btn-lg" type="submit">
-                Add
-              </Button>
-            </div>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary">Close</Button>
-          <Button variant="primary">Save Changes</Button>
-        </Modal.Footer>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleDelete}>
+              Delete
+            </Button>
+            <Button variant="primary" type="submit">
+              Edit
+            </Button>
+          </Modal.Footer>
+        </Form>
       </Modal>
     </div>
   );

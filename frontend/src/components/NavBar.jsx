@@ -1,10 +1,10 @@
 import React from "react";
 import { Navbar, Nav, Form, FormControl, Button } from "react-bootstrap";
 
-const NavBar = () => {
+const NavBar = (props) => {
   return (
     <>
-      <Navbar bg="dark" expand="lg">
+      <Navbar bg="dark" expand="lg" variant="dark">
         <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -13,7 +13,13 @@ const NavBar = () => {
             <Nav.Link href="#link">Link</Nav.Link>
           </Nav>
           <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+            <FormControl
+              type="text"
+              placeholder="Search"
+              className="mr-sm-2"
+              value={props.searchValue}
+              onChange={(e) => props.handleInput(e)}
+            />
             <Button variant="outline-success">Search</Button>
           </Form>
         </Navbar.Collapse>
